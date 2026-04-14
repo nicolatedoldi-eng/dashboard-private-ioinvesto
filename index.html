@@ -137,7 +137,7 @@ input[type=range] { width:100%; accent-color:var(--brand); }
           <div class="mini"><div class="mini-title">Miglior crescita</div><div class="mini-value">Francesco Scinetti</div><div class="footer-note">128.8% YoY sul fatturato totale.</div></div>
           <div class="mini"><div class="mini-title">Più repricing</div><div class="mini-value">Fabrizio Natale</div><div class="footer-note">55.1% YoY sulla parcella media.</div></div>
           <div class="mini"><div class="mini-title">Più shift verso esterni</div><div class="mini-value">Fabio Cignoni</div><div class="footer-note">+48.4 pp di mix ricavi esterni.</div></div>
-          <div class="mini"><div class="mini-title">Trend da osservare</div><div class="mini-value">Andrea Spano</div><div class="footer-note">-9.3% YoY, in osservazione.</div></div>
+          <div class="mini"><div class="mini-title">Trend da osservare</div><div class="mini-value">Giovanni MagrinÈ.2% YoY sul fatturato totale.</div></div>
         </div>
       </div>
     </div>
@@ -238,14 +238,14 @@ input[type=range] { width:100%; accent-color:var(--brand); }
     </div>
     <div class="modal-body">
       <div class="card-grid">
-        <div class="stat-card"><div class="stat-label">Fatturato attuale</div><div class="stat-value" id="modalRevenue"></div><div class="delta" id="modalRevenueDelta"></div></div>
+        <div class="stat-card"><div class="stat-label">Fatturato attuale</div><div class="stat-value" id="modalRevenue"></div><div class="delta" id="modalRevenueDelta"></div><div class="footer-note" id="modalRevenueAbsDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Clienti totali</div><div class="stat-value" id="modalClients"></div><div class="delta" id="modalClientsDelta"></div><div class="footer-note" id="modalClientsAbsDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Parcella media</div><div class="stat-value" id="modalAvgFee"></div><div class="delta" id="modalFeeDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Clienti esterni</div><div class="stat-value" id="modalExtClients"></div><div class="delta" id="modalExtClientsDelta"></div><div class="footer-note" id="modalExtClientsAbsDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Clienti interni</div><div class="stat-value" id="modalIntClients"></div><div class="delta" id="modalIntClientsDelta"></div><div class="footer-note" id="modalIntClientsAbsDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Fatturato per cliente</div><div class="stat-value" id="modalRpc"></div><div class="delta" id="modalRpcDelta"></div></div>
-        <div class="stat-card"><div class="stat-label">Fatturato esterni</div><div class="stat-value" id="modalExtRevenue"></div><div class="delta" id="modalExtRevenueDelta"></div></div>
-        <div class="stat-card"><div class="stat-label">Fatturato interni</div><div class="stat-value" id="modalIntRevenue"></div><div class="delta" id="modalIntRevenueDelta"></div></div>
+        <div class="stat-card"><div class="stat-label">Fatturato esterni</div><div class="stat-value" id="modalExtRevenue"></div><div class="delta" id="modalExtRevenueDelta"></div><div class="footer-note" id="modalExtRevenueAbsDelta"></div></div>
+        <div class="stat-card"><div class="stat-label">Fatturato interni</div><div class="stat-value" id="modalIntRevenue"></div><div class="delta" id="modalIntRevenueDelta"></div><div class="footer-note" id="modalIntRevenueAbsDelta"></div></div>
       </div>
 
       <div class="progress-block">
@@ -326,6 +326,10 @@ function chip(value) {
 }
 function clientDeltaChip(value) {
   return `<span class="yoy-chip ${value >= 0 ? 'up' : 'down'}">${value >= 0 ? '+' : ''}${value}</span>`;
+}
+function absEuroDeltaLine(value) {
+  if (value === null || value === undefined || Number.isNaN(value) || !Number.isFinite(value)) return 'Variazione assoluta: n.d.';
+  return `Variazione assoluta: ${value >= 0 ? '+' : '-'}${euro0(Math.abs(value))}`;
 }
 function pillClass(segment) {
   if (segment === 'Premium') return 'premium';
@@ -460,6 +464,9 @@ function openModal(c) {
   setDelta(document.getElementById('modalIntRevenueDelta'), c.yoyInternalRevenue);
   setDelta(document.getElementById('modalRpcDelta'), c.yoyRpc);
 
+  document.getElementById('modalRevenueAbsDelta').textContent = absEuroDeltaLine(c.revenue - c.prev.revenue);
+  document.getElementById('modalExtRevenueAbsDelta').textContent = absEuroDeltaLine(c.externalRevenue - c.prev.externalRevenue);
+  document.getElementById('modalIntRevenueAbsDelta').textContent = absEuroDeltaLine(c.internalRevenue - c.prev.internalRevenue);
   document.getElementById('modalClientsAbsDelta').textContent = `Variazione assoluta: ${c.totalClients - c.prev.totalClients >= 0 ? '+' : ''}${c.totalClients - c.prev.totalClients}`;
   document.getElementById('modalExtClientsAbsDelta').textContent = `Variazione assoluta: ${c.externalClients - c.prev.externalClients >= 0 ? '+' : ''}${c.externalClients - c.prev.externalClients}`;
   document.getElementById('modalIntClientsAbsDelta').textContent = `Variazione assoluta: ${c.internalClients - c.prev.internalClients >= 0 ? '+' : ''}${c.internalClients - c.prev.internalClients}`;
