@@ -145,7 +145,33 @@ input[type=range] { width:100%; accent-color:var(--brand); }
           <div class="mini"><div class="mini-title">Più repricing</div><div class="mini-value">Fabrizio Natale</div><div class="footer-note">55.1% YoY sulla parcella media.</div></div>
           <div class="mini"><div class="mini-title">Più shift verso esterni</div><div class="mini-value">Fabio Cignoni</div><div class="footer-note">+48.4 pp di mix ricavi esterni.</div></div>
           <div class="mini"><div class="mini-title">Trend da osservare</div><div class="mini-value">Giovanni Magrin</div><div class="footer-note">+10,2% YoY sul fatturato totale.</div></div>
-          
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-inner">
+        <div class="section-title">Lettura del team</div>
+        <div class="section-sub">Alcuni segnali utili emersi dai numeri.</div>
+        <div class="insight-list">
+          <div class="insight">Il fatturato totale cresce più dei clienti: segnale di <strong>migliore monetizzazione</strong> e crescita qualitativa del team.</div>
+          <div class="insight">Il business si sta spostando verso i <strong>clienti esterni</strong>, con una traiettoria molto forte rispetto all'anno scorso.</div>
+          <div class="insight"><strong>Riccardo Ramacciotti</strong> resta il benchmark operativo, mentre <strong>Francesco Scinetti</strong> è il caso di crescita da studiare.</div>
+          <div class="insight">L'evoluzione della parcella media del team mostra ulteriori <strong>opportunità di valorizzazione</strong> del portafoglio.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-inner">
+        <div class="section-title">Simulatore opportunità pricing</div>
+        <div class="section-sub">Scenario planning su una crescita della parcella media.</div>
+        <div class="range-row"><div class="mini-title">Incremento ipotizzato</div><div class="range-value"><span id="upliftLabel">10</span>%</div></div>
+        <input type="range" id="uplift" min="0" max="30" value="10" step="1">
+        <div class="cards-stack" style="margin-top:16px">
+          <div class="mini"><div class="mini-title">Extra fatturato stimato</div><div class="mini-value" id="extraRevenue"></div><div class="footer-note">Scenario applicato alle principali opportunità di crescita della parcella media.</div></div>
+          <div class="mini"><div class="mini-title">Nuovo fatturato teorico</div><div class="mini-value" id="newRevenue"></div><div class="footer-note">Scenario planning iniziale su base lineare.</div></div>
         </div>
         <div class="target-list" id="targets" style="margin-top:16px"></div>
       </div>
@@ -221,7 +247,7 @@ input[type=range] { width:100%; accent-color:var(--brand); }
       <div class="card-grid">
         <div class="stat-card"><div class="stat-label">Fatturato attuale</div><div class="stat-value" id="modalRevenue"></div><div class="delta" id="modalRevenueDelta"></div><div class="footer-note" id="modalRevenueAbsDelta"></div><div class="mini-growth"><div class="mini-growth-head"><span>Vs anno scorso</span><span id="modalRevenueBarLabel"></span></div><div class="mini-growth-track"><div class="mini-growth-fill up" id="modalRevenueBar" style="width:0%"></div></div></div></div>
         <div class="stat-card"><div class="stat-label">Clienti totali</div><div class="stat-value" id="modalClients"></div><div class="delta" id="modalClientsDelta"></div><div class="footer-note" id="modalClientsAbsDelta"></div></div>
-        <div class="stat-card"><div class="stat-label">Parcella media</div><div class="stat-value" id="modalAvgFee"></div><div class="delta" id="modalFeeDelta"></div><div class="footer-note" id="modalFeeAbsDelta"></div><div class="mini-growth"><div class="mini-growth-head"><span>Vs anno scorso</span><span id="modalFeeBarLabel"></span></div><div class="mini-growth-track"><div class="mini-growth-fill up" id="modalFeeBar" style="width:0%"></div></div></div></div>
+        <div class="stat-card"><div class="stat-label">Parcella media</div><div class="stat-value" id="modalAvgFee"></div><div class="delta" id="modalFeeDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Clienti esterni</div><div class="stat-value" id="modalExtClients"></div><div class="delta" id="modalExtClientsDelta"></div><div class="footer-note" id="modalExtClientsAbsDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Clienti interni</div><div class="stat-value" id="modalIntClients"></div><div class="delta" id="modalIntClientsDelta"></div><div class="footer-note" id="modalIntClientsAbsDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Fatturato per cliente</div><div class="stat-value" id="modalRpc"></div><div class="delta" id="modalRpcDelta"></div></div>
@@ -463,7 +489,6 @@ function openModal(c) {
   setDelta(document.getElementById('modalRpcDelta'), c.yoyRpc);
 
   document.getElementById('modalRevenueAbsDelta').textContent = absEuroDeltaLine(c.revenue - c.prev.revenue);
-  document.getElementById('modalFeeAbsDelta').textContent = absEuroDeltaLine(c.avgFee - (c.prev.avgFee ?? 0));
   document.getElementById('modalExtRevenueAbsDelta').textContent = absEuroDeltaLine(c.externalRevenue - c.prev.externalRevenue);
   document.getElementById('modalIntRevenueAbsDelta').textContent = absEuroDeltaLine(c.internalRevenue - c.prev.internalRevenue);
   document.getElementById('modalClientsAbsDelta').textContent = `Variazione assoluta: ${c.totalClients - c.prev.totalClients >= 0 ? '+' : ''}${c.totalClients - c.prev.totalClients}`;
