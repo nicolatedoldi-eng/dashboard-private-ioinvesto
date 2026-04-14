@@ -247,7 +247,7 @@ input[type=range] { width:100%; accent-color:var(--brand); }
       <div class="card-grid">
         <div class="stat-card"><div class="stat-label">Fatturato attuale</div><div class="stat-value" id="modalRevenue"></div><div class="delta" id="modalRevenueDelta"></div><div class="footer-note" id="modalRevenueAbsDelta"></div><div class="mini-growth"><div class="mini-growth-head"><span>Vs anno scorso</span><span id="modalRevenueBarLabel"></span></div><div class="mini-growth-track"><div class="mini-growth-fill up" id="modalRevenueBar" style="width:0%"></div></div></div></div>
         <div class="stat-card"><div class="stat-label">Clienti totali</div><div class="stat-value" id="modalClients"></div><div class="delta" id="modalClientsDelta"></div><div class="footer-note" id="modalClientsAbsDelta"></div></div>
-        <div class="stat-card"><div class="stat-label">Parcella media</div><div class="stat-value" id="modalAvgFee"></div><div class="delta" id="modalFeeDelta"></div></div>
+        <div class="stat-card"><div class="stat-label">Parcella media</div><div class="stat-value" id="modalAvgFee"></div><div class="delta" id="modalFeeDelta"></div><div class="footer-note" id="modalFeeAbsDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Clienti esterni</div><div class="stat-value" id="modalExtClients"></div><div class="delta" id="modalExtClientsDelta"></div><div class="footer-note" id="modalExtClientsAbsDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Clienti interni</div><div class="stat-value" id="modalIntClients"></div><div class="delta" id="modalIntClientsDelta"></div><div class="footer-note" id="modalIntClientsAbsDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Fatturato per cliente</div><div class="stat-value" id="modalRpc"></div><div class="delta" id="modalRpcDelta"></div></div>
@@ -482,6 +482,8 @@ function openModal(c) {
   setDelta(document.getElementById('modalRevenueDelta'), c.yoyRevenue);
   setDelta(document.getElementById('modalClientsDelta'), c.yoyClients);
   setDelta(document.getElementById('modalFeeDelta'), c.yoyAvgFee);
+  const prevAvgFee = (c.prev && c.prev.totalClients) ? (c.prev.revenue / c.prev.totalClients) : null;
+  document.getElementById('modalFeeAbsDelta').textContent = absEuroDeltaLine(c.avgFee - prevAvgFee);
   setDelta(document.getElementById('modalExtClientsDelta'), ((c.externalClients - c.prev.externalClients) / (c.prev.externalClients || 1)) * 100);
   setDelta(document.getElementById('modalIntClientsDelta'), ((c.internalClients - c.prev.internalClients) / (c.prev.internalClients || 1)) * 100);
   setDelta(document.getElementById('modalExtRevenueDelta'), c.yoyExternalRevenue);
