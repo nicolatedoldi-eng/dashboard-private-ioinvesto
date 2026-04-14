@@ -100,6 +100,13 @@ input[type=range] { width:100%; accent-color:var(--brand); }
   .grid-5, .grid-3, .grid-2, .card-grid { grid-template-columns:1fr; }
   .hero { flex-direction:column; align-items:start; }
 }
+
+    .mini-growth { margin-top: 10px; }
+    .mini-growth-head { display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:6px; }
+    .mini-growth-track { width:100%; height:8px; border-radius:999px; background:#edf2f7; overflow:hidden; }
+    .mini-growth-fill.up { height:100%; background:linear-gradient(90deg,#16a34a,#4ade80); }
+    .mini-growth-fill.down { height:100%; background:linear-gradient(90deg,#f59e0b,#fbbf24); }
+
 </style>
 </head>
 <body>
@@ -238,14 +245,14 @@ input[type=range] { width:100%; accent-color:var(--brand); }
     </div>
     <div class="modal-body">
       <div class="card-grid">
-        <div class="stat-card"><div class="stat-label">Fatturato attuale</div><div class="stat-value" id="modalRevenue"></div><div class="delta" id="modalRevenueDelta"></div><div class="footer-note" id="modalRevenueAbsDelta"></div></div>
+        <div class="stat-card"><div class="stat-label">Fatturato attuale</div><div class="stat-value" id="modalRevenue"></div><div class="delta" id="modalRevenueDelta"></div><div class="footer-note" id="modalRevenueAbsDelta"></div><div class="mini-growth"><div class="mini-growth-head"><span>Vs anno scorso</span><span id="modalRevenueBarLabel"></span></div><div class="mini-growth-track"><div class="mini-growth-fill up" id="modalRevenueBar" style="width:0%"></div></div></div></div>
         <div class="stat-card"><div class="stat-label">Clienti totali</div><div class="stat-value" id="modalClients"></div><div class="delta" id="modalClientsDelta"></div><div class="footer-note" id="modalClientsAbsDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Parcella media</div><div class="stat-value" id="modalAvgFee"></div><div class="delta" id="modalFeeDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Clienti esterni</div><div class="stat-value" id="modalExtClients"></div><div class="delta" id="modalExtClientsDelta"></div><div class="footer-note" id="modalExtClientsAbsDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Clienti interni</div><div class="stat-value" id="modalIntClients"></div><div class="delta" id="modalIntClientsDelta"></div><div class="footer-note" id="modalIntClientsAbsDelta"></div></div>
         <div class="stat-card"><div class="stat-label">Fatturato per cliente</div><div class="stat-value" id="modalRpc"></div><div class="delta" id="modalRpcDelta"></div></div>
-        <div class="stat-card"><div class="stat-label">Fatturato esterni</div><div class="stat-value" id="modalExtRevenue"></div><div class="delta" id="modalExtRevenueDelta"></div><div class="footer-note" id="modalExtRevenueAbsDelta"></div></div>
-        <div class="stat-card"><div class="stat-label">Fatturato interni</div><div class="stat-value" id="modalIntRevenue"></div><div class="delta" id="modalIntRevenueDelta"></div><div class="footer-note" id="modalIntRevenueAbsDelta"></div></div>
+        <div class="stat-card"><div class="stat-label">Fatturato esterni</div><div class="stat-value" id="modalExtRevenue"></div><div class="delta" id="modalExtRevenueDelta"></div><div class="footer-note" id="modalExtRevenueAbsDelta"></div><div class="mini-growth"><div class="mini-growth-head"><span>Vs anno scorso</span><span id="modalExtRevenueBarLabel"></span></div><div class="mini-growth-track"><div class="mini-growth-fill up" id="modalExtRevenueBar" style="width:0%"></div></div></div></div>
+        <div class="stat-card"><div class="stat-label">Fatturato interni</div><div class="stat-value" id="modalIntRevenue"></div><div class="delta" id="modalIntRevenueDelta"></div><div class="footer-note" id="modalIntRevenueAbsDelta"></div><div class="mini-growth"><div class="mini-growth-head"><span>Vs anno scorso</span><span id="modalIntRevenueBarLabel"></span></div><div class="mini-growth-track"><div class="mini-growth-fill up" id="modalIntRevenueBar" style="width:0%"></div></div></div></div>
       </div>
 
       <div class="progress-block">
@@ -327,6 +334,23 @@ function chip(value) {
 function clientDeltaChip(value) {
   return `<span class="yoy-chip ${value >= 0 ? 'up' : 'down'}">${value >= 0 ? '+' : ''}${value}</span>`;
 }
+
+function setMiniGrowthBar(barId, labelId, value) {
+  const bar = document.getElementById(barId);
+  const label = document.getElementById(labelId);
+  if (!bar || !label) return;
+  if (value === null || value === undefined || Number.isNaN(value) || !Number.isFinite(value)) {
+    bar.style.width = '0%';
+    bar.className = 'mini-growth-fill up';
+    label.textContent = 'n.d.';
+    return;
+  }
+  const width = Math.min(Math.abs(value), 100);
+  bar.style.width = `${width}%`;
+  bar.className = `mini-growth-fill ${value >= 0 ? 'up' : 'down'}`;
+  label.textContent = `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`;
+}
+
 function absEuroDeltaLine(value) {
   if (value === null || value === undefined || Number.isNaN(value) || !Number.isFinite(value)) return 'Variazione assoluta: n.d.';
   return `Variazione assoluta: ${value >= 0 ? '+' : '-'}${euro0(Math.abs(value))}`;
@@ -470,6 +494,11 @@ function openModal(c) {
   document.getElementById('modalClientsAbsDelta').textContent = `Variazione assoluta: ${c.totalClients - c.prev.totalClients >= 0 ? '+' : ''}${c.totalClients - c.prev.totalClients}`;
   document.getElementById('modalExtClientsAbsDelta').textContent = `Variazione assoluta: ${c.externalClients - c.prev.externalClients >= 0 ? '+' : ''}${c.externalClients - c.prev.externalClients}`;
   document.getElementById('modalIntClientsAbsDelta').textContent = `Variazione assoluta: ${c.internalClients - c.prev.internalClients >= 0 ? '+' : ''}${c.internalClients - c.prev.internalClients}`;
+
+  setMiniGrowthBar('modalRevenueBar', 'modalRevenueBarLabel', c.yoyRevenue);
+  setMiniGrowthBar('modalFeeBar', 'modalFeeBarLabel', c.yoyAvgFee);
+  setMiniGrowthBar('modalExtRevenueBar', 'modalExtRevenueBarLabel', c.yoyExternalRevenue);
+  setMiniGrowthBar('modalIntRevenueBar', 'modalIntRevenueBarLabel', c.yoyInternalRevenue);
 
   const extClientsPct = c.totalClients ? (c.externalClients / c.totalClients) * 100 : 0;
   const intClientsPct = c.totalClients ? (c.internalClients / c.totalClients) * 100 : 0;
