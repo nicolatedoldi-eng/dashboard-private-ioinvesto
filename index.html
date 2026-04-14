@@ -207,8 +207,12 @@ input[type=range] { width:100%; accent-color:var(--brand); }
             <tr>
               <th>Consulente</th>
               <th class="num">Clienti</th>
+              <th class="num">Esterni</th>
+              <th class="num">Interni</th>
               <th class="num">Δ clienti</th>
               <th class="num">Fatturato</th>
+              <th class="num">Fatt. esterni</th>
+              <th class="num">Fatt. interni</th>
               <th class="num">YoY fatt.</th>
               <th class="num">Parcella media</th>
               <th class="num">YoY parc.</th>
@@ -417,8 +421,12 @@ function renderTable(filter='') {
           <div class="email">${escapeHtml(c.email)}</div>
         </td>
         <td class="num">${num(c.totalClients)}</td>
+        <td class="num">${num(c.externalClients)}</td>
+        <td class="num">${num(c.internalClients)}</td>
         <td class="num">${clientDeltaChip(c.totalClients - c.prev.totalClients)}</td>
         <td class="num">${euro0(c.revenue)}</td>
+        <td class="num">${euro0(c.externalRevenue)}</td>
+        <td class="num">${euro0(c.internalRevenue)}</td>
         <td class="num">${chip(c.yoyRevenue)}</td>
         <td class="num">${euro2(c.avgFee)}</td>
         <td class="num">${chip(c.yoyAvgFee)}</td>
